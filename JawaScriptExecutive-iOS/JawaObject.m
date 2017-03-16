@@ -110,10 +110,10 @@
         if (value == nil || value.object == nil)
             [ret appendString:@"null"];
         else if ([value.object isKindOfClass:[NSString class]]) {
-            [ret appendString:@"\""];
-            NSString* r = [[value description] stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+            NSData *stringData = [NSJSONSerialization dataWithJSONObject:@[[value description]] options:0 error:nil];
+            NSString* r = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            r = [r substringWithRange:NSMakeRange(1, r.length-2)];
             [ret appendString:r];
-            [ret appendString:@"\""];
         } else if ([value.object isKindOfClass:[JawaObject class]]) {
             [(JawaObject*)value.object toJSON:ret];
         } else
